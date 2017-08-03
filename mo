@@ -792,7 +792,7 @@ moShow() {
             if [[ -z "$MO_FAIL_ON_UNSET" ]] || moTestVarSet "$1"; then
                 echo -n "${!1}"
             else
-                echo "Env variable not set: $1" >&2
+                echo "Variable not set: $1" >&2;
                 exit 1
             fi
         fi
