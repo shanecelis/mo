@@ -111,9 +111,9 @@ mo() (
     fi
 
     moGetContent moContent "${files[@]}" || return 1
+    declare -a moUnsetVars=()
     moParse "$moContent" "" true
 )
-
 
 # Internal: Scan content until the right end tag is found.  Creates an array
 # with the following members:
@@ -777,7 +777,7 @@ moShow() {
 
     moSplit moNameParts "$1" "."
 
-    if [[ -z "${moNameParts[1]}" ]]; then
+    if [[ -z "${moNameParts[1]+}" ]]; then
         if moIsArray "$1"; then
             eval moJoin moJoined "," "\${$1[@]}"
             echo -n "$moJoined"
