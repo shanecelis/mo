@@ -594,6 +594,7 @@ moParse() {
                         #: Consider piping the output to moGetContent
                         #: so the lambda does not execute in a subshell?
                         moContent=$($moTag "${moBlock[0]}")
+                        $moTag "${moBlock[0]}" > /dev/null; # If the function has side-effects, run them in this shell.
                         moParse "$moContent" "$moCurrent" false
                         moContent="${moBlock[2]}"
                     elif moIsArray "$moTag"; then
@@ -770,7 +771,12 @@ moShow() {
     local moJoined moNameParts
 
     if moIsFunction "$1"; then
+        # $1 is a function, but because it's run in a subshell, it can't affect
+        # the global state.
         CONTENT=$($1 "")
+        # HACK
+        $1 "" > /dev/null; # Run the function in this shell for its side effects.
+        # end HACK
         moParse "$CONTENT" "$2" false
         return 0
     fi
